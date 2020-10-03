@@ -1,0 +1,78 @@
+// generated with ast extension for cup
+// version 0.8
+// 22/5/2020 16:1:32
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public class TypeVarsElementsList extends VarDecl {
+
+    private Type Type;
+    private VarsElementsList VarsElementsList;
+
+    public TypeVarsElementsList (Type Type, VarsElementsList VarsElementsList) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
+        this.VarsElementsList=VarsElementsList;
+        if(VarsElementsList!=null) VarsElementsList.setParent(this);
+    }
+
+    public Type getType() {
+        return Type;
+    }
+
+    public void setType(Type Type) {
+        this.Type=Type;
+    }
+
+    public VarsElementsList getVarsElementsList() {
+        return VarsElementsList;
+    }
+
+    public void setVarsElementsList(VarsElementsList VarsElementsList) {
+        this.VarsElementsList=VarsElementsList;
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void childrenAccept(Visitor visitor) {
+        if(Type!=null) Type.accept(visitor);
+        if(VarsElementsList!=null) VarsElementsList.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
+        if(VarsElementsList!=null) VarsElementsList.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(Type!=null) Type.traverseBottomUp(visitor);
+        if(VarsElementsList!=null) VarsElementsList.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("TypeVarsElementsList(\n");
+
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(VarsElementsList!=null)
+            buffer.append(VarsElementsList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [TypeVarsElementsList]");
+        return buffer.toString();
+    }
+}

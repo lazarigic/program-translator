@@ -1,0 +1,58 @@
+// generated with ast extension for cup
+// version 0.8
+// 22/5/2020 15:0:5
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public class DesStmMethodCall extends DesignatorStatement {
+
+    private MethCall MethCall;
+
+    public DesStmMethodCall (MethCall MethCall) {
+        this.MethCall=MethCall;
+        if(MethCall!=null) MethCall.setParent(this);
+    }
+
+    public MethCall getMethCall() {
+        return MethCall;
+    }
+
+    public void setMethCall(MethCall MethCall) {
+        this.MethCall=MethCall;
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void childrenAccept(Visitor visitor) {
+        if(MethCall!=null) MethCall.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(MethCall!=null) MethCall.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(MethCall!=null) MethCall.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("DesStmMethodCall(\n");
+
+        if(MethCall!=null)
+            buffer.append(MethCall.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [DesStmMethodCall]");
+        return buffer.toString();
+    }
+}

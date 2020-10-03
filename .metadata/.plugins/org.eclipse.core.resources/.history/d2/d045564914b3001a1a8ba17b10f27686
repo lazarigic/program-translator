@@ -1,0 +1,78 @@
+// generated with ast extension for cup
+// version 0.8
+// 19/5/2020 23:13:22
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public class MethodDeclarations extends MethodsList {
+
+    private MethodsList MethodsList;
+    private MethodDecl MethodDecl;
+
+    public MethodDeclarations (MethodsList MethodsList, MethodDecl MethodDecl) {
+        this.MethodsList=MethodsList;
+        if(MethodsList!=null) MethodsList.setParent(this);
+        this.MethodDecl=MethodDecl;
+        if(MethodDecl!=null) MethodDecl.setParent(this);
+    }
+
+    public MethodsList getMethodsList() {
+        return MethodsList;
+    }
+
+    public void setMethodsList(MethodsList MethodsList) {
+        this.MethodsList=MethodsList;
+    }
+
+    public MethodDecl getMethodDecl() {
+        return MethodDecl;
+    }
+
+    public void setMethodDecl(MethodDecl MethodDecl) {
+        this.MethodDecl=MethodDecl;
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void childrenAccept(Visitor visitor) {
+        if(MethodsList!=null) MethodsList.accept(visitor);
+        if(MethodDecl!=null) MethodDecl.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(MethodsList!=null) MethodsList.traverseTopDown(visitor);
+        if(MethodDecl!=null) MethodDecl.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(MethodsList!=null) MethodsList.traverseBottomUp(visitor);
+        if(MethodDecl!=null) MethodDecl.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("MethodDeclarations(\n");
+
+        if(MethodsList!=null)
+            buffer.append(MethodsList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(MethodDecl!=null)
+            buffer.append(MethodDecl.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [MethodDeclarations]");
+        return buffer.toString();
+    }
+}

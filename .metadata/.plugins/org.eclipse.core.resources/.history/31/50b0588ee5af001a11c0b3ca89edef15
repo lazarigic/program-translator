@@ -1,0 +1,78 @@
+// generated with ast extension for cup
+// version 0.8
+// 16/5/2020 17:5:48
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public class ProgramElementList extends ProgramElementsList {
+
+    private ProgramElementsList ProgramElementsList;
+    private ProgramElement ProgramElement;
+
+    public ProgramElementList (ProgramElementsList ProgramElementsList, ProgramElement ProgramElement) {
+        this.ProgramElementsList=ProgramElementsList;
+        if(ProgramElementsList!=null) ProgramElementsList.setParent(this);
+        this.ProgramElement=ProgramElement;
+        if(ProgramElement!=null) ProgramElement.setParent(this);
+    }
+
+    public ProgramElementsList getProgramElementsList() {
+        return ProgramElementsList;
+    }
+
+    public void setProgramElementsList(ProgramElementsList ProgramElementsList) {
+        this.ProgramElementsList=ProgramElementsList;
+    }
+
+    public ProgramElement getProgramElement() {
+        return ProgramElement;
+    }
+
+    public void setProgramElement(ProgramElement ProgramElement) {
+        this.ProgramElement=ProgramElement;
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void childrenAccept(Visitor visitor) {
+        if(ProgramElementsList!=null) ProgramElementsList.accept(visitor);
+        if(ProgramElement!=null) ProgramElement.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(ProgramElementsList!=null) ProgramElementsList.traverseTopDown(visitor);
+        if(ProgramElement!=null) ProgramElement.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(ProgramElementsList!=null) ProgramElementsList.traverseBottomUp(visitor);
+        if(ProgramElement!=null) ProgramElement.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("ProgramElementList(\n");
+
+        if(ProgramElementsList!=null)
+            buffer.append(ProgramElementsList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(ProgramElement!=null)
+            buffer.append(ProgramElement.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [ProgramElementList]");
+        return buffer.toString();
+    }
+}

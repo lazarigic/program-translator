@@ -1,0 +1,317 @@
+
+
+package rs.ac.bg.etf.pp1;
+
+import java_cup.runtime.*;
+import org.apache.log4j.*;
+import rs.ac.bg.etf.pp1.ast.*;
+
+parser code {:
+
+	Logger log = Logger.getLogger(getClass());
+   
+   boolean errorDetected;
+    // slede redefinisani metodi za prijavu gresaka radi izmene teksta poruke
+     
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+  
+    public void syntax_error(Symbol cur_token) {
+        report_error("\nSintaksna greska", cur_token);
+    }
+  
+    public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+        report_fatal_error("Fatalna greska, parsiranje se ne moze nastaviti", cur_token);
+    }
+
+    public void report_error(String message, Object info) {
+    	errorDetected=true;
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" na liniji ").append(((Symbol)info).left);
+        log.error(msg.toString());
+    }
+
+
+:}
+
+init with {:
+	errorDetected = false;
+:}
+
+scan with {:
+	Symbol s = this.getScanner().next_token();
+	if (s != null && s.value != null) 
+		log.info(s.toString() + " " + s.value.toString());
+	return s;
+:}
+
+terminal PROG, L_BRACE, R_BRACE, SEMI, COMMA, EQUALS, CONST, L_INDEXER, R_INDEXER;
+terminal L_PAREN, R_PAREN, READ, PRINT;
+terminal INCREMENT, DECREMENT, DOT, NEW, MINUS, PLUS, MULTIPLY, DIVIDE, MODULATE, RETURN, AT, TAR, ADDEQUALS, SUBEQUALS, MULEQUALS, DIVEQUALS, MODEQUALS, DOLAREQUALS;
+
+terminal String IDENT;
+terminal String VOID;
+terminal Integer NUMBER;
+terminal Boolean BOOL;
+terminal Character CHAR;
+nonterminal ProgramElementsList, ProgramElement, VarDecl;
+nonterminal VarsElementsList;
+nonterminal NumbersListOptional;
+nonterminal NumbersList, AddOp, MulOp;
+nonterminal PreArrIdxDummy, AssignOp, AddOpLeft, AddOpRight, MulOpLeft, MulOpRight;
+nonterminal FormParams, FormParamsList, ArrayDecl;
+nonterminal ActualParams, ActualParamsList, Empty;
+
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program, ConstDecl, ConstList, OneVar;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj VarsList, MethodsList, MethodDecl, DesignatorStatement, Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj StatementsList, Statement, GlobalVariable, GlobalVarDeclList, GlobalVarDecl;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct OneConst, Type, VoidType, Term, Factor, FactorAt, Expr, Expression, NewArrayType, Assignment, TermTar;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodName, FormParam, MethCall;
+
+Program ::= (Program) PROG ProgName:p ProgramElementsList L_BRACE MethodsList R_BRACE;
+
+ProgName ::= (ProgName) IDENT:programName;
+
+ProgramElementsList ::= (ProgramElementList) ProgramElementsList ProgramElement 
+						|
+						(NoProgramElementsList)/* epsilon */
+						;
+												
+ProgramElement ::=(ProgramElementConstDecl)ConstDecl 
+				|
+				(ProgramElementVarDecl) GlobalVarDecl;
+												
+ConstDecl ::= (ConstDecl) CONST Type:t ConstList:c SEMI ;
+
+ConstList ::= (ListConst) ConstList COMMA IDENT:constName EQUALS OneConst:ConstObject
+				|
+			  (SingleConst) IDENT:constName EQUALS OneConst:currentConstObject; 
+
+OneConst ::=    (Const) NUMBER:value
+				|
+			 	(Char) CHAR:value
+				|
+			 	(Bool) BOOL:value
+				;
+				
+GlobalVarDecl ::=  (GlobalVarDecl) Type:type GlobalVarDeclList:gl SEMI;
+
+GlobalVarDeclList ::= (GlobalVarDeclList_List) GlobalVarDeclList:t COMMA GlobalVariable:vx
+                            |
+                      (GlobalVarDeclList_Item) GlobalVariable:ver;
+                          
+                         
+GlobalVariable ::= (OneGlobalVarDecl) OneVar:one
+			  		|
+				(GlobalVarError) error:e
+				{: parser.report_error("Oporavak od greske u definiciji globalne promenljive na liniji " + eleft, null); :}
+			     ;
+			
+OneVar ::= 	(Var) IDENT:varName
+ 			|
+ 			(OneVarArray)IDENT:varName L_INDEXER R_INDEXER;
+ 			
+VarDecl ::=	(TypeVarsElementsList) Type:varType VarsElementsList:list SEMI		
+			|
+			(ErrorVarDecl) Type error SEMI:e
+			;
+			
+			
+
+VarsElementsList ::=  (ListVar) VarsElementsList:l COMMA OneVar:one
+ 						|
+ 						error COMMA OneVar:e
+ 						{: parser.report_error("Oporavak od greske u definiciji globalne promenljive [prazno]", null); :}
+ 						|
+ 						(SignleVar) OneVar:one
+ 						|
+ 						error OneVar;
+ 
+ 			
+VarsList ::= (VarListDeclarations) VarsList:vl VarDecl:vd
+					|
+					(NoVarListDeclarations)/* epsilon */
+					;
+					
+Type ::= (Type) IDENT:typeName;
+
+MethodsList ::= (MethodDeclarations) MethodsList MethodDecl 
+				|
+				(NoMethodDeclarations)/* epsilon */
+				; 
+MethodDecl ::= (MethodDecl) VoidType:vtt MethodName:n L_PAREN FormParams:fParams R_PAREN 
+				VarsList:vlm L_BRACE:l
+				StatementsList:st R_BRACE:r
+				;
+MethodName ::= (MethodName) IDENT:methodName;
+
+VoidType ::= (TypeMethod) Type:t
+			|
+			(VoidMethod) VOID:value;
+			
+
+FormParams ::= (FormParameters)FormParamsList:fpl
+			   |
+			   (NoFormParams)/*  epsilon */;
+
+FormParamsList ::= (FormParametersList) FormParamsList:fpList COMMA FormParam:fpAfterComma 
+				   |
+				   (OneParam) FormParam:fpOne
+				   ;
+				   
+FormParam ::= (FormParamIdent) Type:fpt IDENT:fpName 
+			  |
+			  (ArrayFormParam) Type:fptArray IDENT:fpNameArray L_INDEXER R_INDEXER
+			  ;
+
+StatementsList ::= (ListStatements) StatementsList:st Statement:t
+					|
+					/* epsilon */
+					;
+					
+Statement ::= 	(DesignatorStmt) DesignatorStatement:d
+				|
+				(ReadStmt) READ L_PAREN Designator:des R_PAREN SEMI
+				|
+				(PrintStmt) PRINT L_PAREN Expr:expr NumbersListOptional R_PAREN SEMI
+				|
+				(ReturnStmEmpty) RETURN:retEmpty SEMI
+				|
+				(ReturnStmWithValue) RETURN Expr:retExp SEMI
+				;		 
+
+				
+NumbersListOptional ::= COMMA NumbersList
+				|
+				/* epsilon*/
+				;
+				
+NumbersList ::= NumbersList COMMA NUMBER  
+				|
+				NUMBER
+				;		
+
+DesignatorStatement ::= (AssignmentDesignator) Designator Assignment
+						|
+						(Increment) Designator:des INCREMENT SEMI
+						|
+						(Decrement) Designator:des DECREMENT SEMI
+						|
+						(DesStmMethodCall) MethCall SEMI
+						;
+						
+MethCall ::= (MethodCall) Designator:methName L_PAREN ActualParams:actParams R_PAREN ;
+
+ActualParams ::= (ActualParameters) ActualParamsList:apl
+				 |
+				 (NoActualParams) /* epsilon*/
+				 ;
+				 
+ActualParamsList ::= (ActualParametersList) ActualParamsList:apList COMMA Expr
+				 	 |
+				 	 (OneActualParam) Expr:oneAps
+				 	 ;
+				 	 
+						
+Assignment ::= (Assignment_Expr) AssignOp Expr SEMI
+               |
+               (Assignment_Error) AssignOp error:e SEMI
+               {: parser.report_error("Oporavak od greske u konstrukciji iskaza dodele na liniji " + eleft, null); :}
+               ;				
+Designator ::=  (DesignatorIdent) IDENT:identifier
+				|
+				(DesignatorArray) Designator:des L_INDEXER PreArrIdxDummy:pr Expr:exp R_INDEXER
+				|
+				(DesignatorError) Designator L_INDEXER error R_INDEXER
+				;
+		
+			
+PreArrIdxDummy ::= (PreArrIdxDummy) /* epsilon */ ;
+
+Expr ::= 	(Expr) Empty Expression;
+
+Empty ::= (Empty);
+				
+Expression ::= 	(TermAddOp) Expression AddOp TermTar 
+				|
+				(SingleTermTarMinus) MINUS TermTar
+				|
+				(SingleTermTar) TermTar
+				;
+
+TermTar ::= (TermTarOp) TermTar TAR Term 
+				|
+				(SingleTerm) Term
+				;
+
+Term ::= (FactorMulOp) Term MulOp FactorAt
+				|
+				(SingleAtFactor) FactorAt
+				;
+			
+FactorAt ::= (FactorAtOp) Factor AT
+			|
+			(SingleFactor) Factor
+			;
+										
+Factor ::=  (ConstFactor) OneConst:constant
+			|
+			(NewFactor) NEW Type:typeObject NewArrayType:arrayObject
+			|
+			(ParenFactor) L_PAREN Expr R_PAREN 
+			|
+			(DesigFactor) Designator
+			|
+			(FactorMethCall) MethCall:fmc
+			;
+			
+NewArrayType ::= (NewArray) L_INDEXER Expr:exp R_INDEXER
+					|
+				 (NoNewArray) /* epsilon */
+					; 
+
+AssignOp ::= (AssignOp_Equals) EQUALS
+		  |	
+		  (AssignOp_AddOpRight) AddOpRight
+		  |
+		  (AssignOp_MulOpRight) MulOpRight;
+
+AddOp ::= (AddOp_AddOpRight) AddOpRight
+		  |
+		  (AddOp_AddOpLeft) AddOpLeft;
+		 
+MulOp ::= (MulOp_MulOpRight) MulOpRight
+		  |
+		  (MulOp_MulOpLeft) MulOpLeft;		  			
+
+AddOpLeft ::= (AddOp_Plus) PLUS
+		  |
+		  (AddOp_Minus) MINUS;	
+					
+MulOpLeft ::= (MulOp_Multiply) MULTIPLY
+		  |
+		  (MulOp_Divide) DIVIDE
+		  |
+		  (MulOp_Modulate) MODULATE;
+		  
+AddOpRight ::= (AddOp_PlusEqual) ADDEQUALS
+		  |
+		  (AddOp_MinusEqual) SUBEQUALS
+		  |
+		  (AddOp_DolarEqual) DOLAREQUALS
+		  ;	
+					
+MulOpRight ::= (MulOp_MultiplyEqual) MULEQUALS
+		  |
+		  (MulOp_DivideEqual) DIVEQUALS
+		  |
+		  (MulOp_ModulateEqual) MODEQUALS;
+
+		  
+
+
+

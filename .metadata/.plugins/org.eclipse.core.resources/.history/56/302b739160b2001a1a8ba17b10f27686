@@ -1,0 +1,158 @@
+// generated with ast extension for cup
+// version 0.8
+// 19/5/2020 18:47:13
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public class MethodDecl implements SyntaxNode {
+
+    private SyntaxNode parent;
+    private int line;
+    public rs.etf.pp1.symboltable.concepts.Obj obj = null;
+
+    private VoidType VoidType;
+    private MethodName MethodName;
+    private FormParams FormParams;
+    private VarsList VarsList;
+    private StatementsList StatementsList;
+
+    public MethodDecl (VoidType VoidType, MethodName MethodName, FormParams FormParams, VarsList VarsList, StatementsList StatementsList) {
+        this.VoidType=VoidType;
+        if(VoidType!=null) VoidType.setParent(this);
+        this.MethodName=MethodName;
+        if(MethodName!=null) MethodName.setParent(this);
+        this.FormParams=FormParams;
+        if(FormParams!=null) FormParams.setParent(this);
+        this.VarsList=VarsList;
+        if(VarsList!=null) VarsList.setParent(this);
+        this.StatementsList=StatementsList;
+        if(StatementsList!=null) StatementsList.setParent(this);
+    }
+
+    public VoidType getVoidType() {
+        return VoidType;
+    }
+
+    public void setVoidType(VoidType VoidType) {
+        this.VoidType=VoidType;
+    }
+
+    public MethodName getMethodName() {
+        return MethodName;
+    }
+
+    public void setMethodName(MethodName MethodName) {
+        this.MethodName=MethodName;
+    }
+
+    public FormParams getFormParams() {
+        return FormParams;
+    }
+
+    public void setFormParams(FormParams FormParams) {
+        this.FormParams=FormParams;
+    }
+
+    public VarsList getVarsList() {
+        return VarsList;
+    }
+
+    public void setVarsList(VarsList VarsList) {
+        this.VarsList=VarsList;
+    }
+
+    public StatementsList getStatementsList() {
+        return StatementsList;
+    }
+
+    public void setStatementsList(StatementsList StatementsList) {
+        this.StatementsList=StatementsList;
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void childrenAccept(Visitor visitor) {
+        if(VoidType!=null) VoidType.accept(visitor);
+        if(MethodName!=null) MethodName.accept(visitor);
+        if(FormParams!=null) FormParams.accept(visitor);
+        if(VarsList!=null) VarsList.accept(visitor);
+        if(StatementsList!=null) StatementsList.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(VoidType!=null) VoidType.traverseTopDown(visitor);
+        if(MethodName!=null) MethodName.traverseTopDown(visitor);
+        if(FormParams!=null) FormParams.traverseTopDown(visitor);
+        if(VarsList!=null) VarsList.traverseTopDown(visitor);
+        if(StatementsList!=null) StatementsList.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(VoidType!=null) VoidType.traverseBottomUp(visitor);
+        if(MethodName!=null) MethodName.traverseBottomUp(visitor);
+        if(FormParams!=null) FormParams.traverseBottomUp(visitor);
+        if(VarsList!=null) VarsList.traverseBottomUp(visitor);
+        if(StatementsList!=null) StatementsList.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("MethodDecl(\n");
+
+        if(VoidType!=null)
+            buffer.append(VoidType.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(MethodName!=null)
+            buffer.append(MethodName.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(FormParams!=null)
+            buffer.append(FormParams.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(VarsList!=null)
+            buffer.append(VarsList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(StatementsList!=null)
+            buffer.append(StatementsList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [MethodDecl]");
+        return buffer.toString();
+    }
+}

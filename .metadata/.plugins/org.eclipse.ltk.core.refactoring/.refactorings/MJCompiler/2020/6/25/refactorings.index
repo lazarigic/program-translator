@@ -1,0 +1,18 @@
+1592318135342	Delete element
+1592318224942	Move compilation unit
+1592318241856	Rename type 'MJParserTest'
+1592318261148	Rename type 'SemanticPass'
+1592319884871	Delete element
+1592321106735	Delete element
+1592322325293	Rename field 'desigObj'
+1592326933233	Delete element
+1592328473219	Extract local variable 'operation'
+1592328499326	Extract local variable 'simbol'
+1592328538304	Rename field 'stackOperation'
+1592329320268	Extract local variable 'obj'
+1592329659459	Extract local variable 'addOpRight'
+1592329764744	Extract local variable 'mulOpRight'
+1592574562412	Delete element
+1592585222904	Delete element
+1592593842359	Delete element
+1592671030484	Delete element

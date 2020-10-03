@@ -1,0 +1,78 @@
+// generated with ast extension for cup
+// version 0.8
+// 16/5/2020 19:18:19
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public class NewFactor extends Factor {
+
+    private Type Type;
+    private NewArrayType NewArrayType;
+
+    public NewFactor (Type Type, NewArrayType NewArrayType) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
+        this.NewArrayType=NewArrayType;
+        if(NewArrayType!=null) NewArrayType.setParent(this);
+    }
+
+    public Type getType() {
+        return Type;
+    }
+
+    public void setType(Type Type) {
+        this.Type=Type;
+    }
+
+    public NewArrayType getNewArrayType() {
+        return NewArrayType;
+    }
+
+    public void setNewArrayType(NewArrayType NewArrayType) {
+        this.NewArrayType=NewArrayType;
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void childrenAccept(Visitor visitor) {
+        if(Type!=null) Type.accept(visitor);
+        if(NewArrayType!=null) NewArrayType.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
+        if(NewArrayType!=null) NewArrayType.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(Type!=null) Type.traverseBottomUp(visitor);
+        if(NewArrayType!=null) NewArrayType.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("NewFactor(\n");
+
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(NewArrayType!=null)
+            buffer.append(NewArrayType.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [NewFactor]");
+        return buffer.toString();
+    }
+}

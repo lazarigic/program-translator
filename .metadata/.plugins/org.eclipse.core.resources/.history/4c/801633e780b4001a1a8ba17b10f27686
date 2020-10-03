@@ -1,0 +1,58 @@
+// generated with ast extension for cup
+// version 0.8
+// 20/5/2020 18:37:16
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public class NumbersListOptionalDerived1 extends NumbersListOptional {
+
+    private NumbersList NumbersList;
+
+    public NumbersListOptionalDerived1 (NumbersList NumbersList) {
+        this.NumbersList=NumbersList;
+        if(NumbersList!=null) NumbersList.setParent(this);
+    }
+
+    public NumbersList getNumbersList() {
+        return NumbersList;
+    }
+
+    public void setNumbersList(NumbersList NumbersList) {
+        this.NumbersList=NumbersList;
+    }
+
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void childrenAccept(Visitor visitor) {
+        if(NumbersList!=null) NumbersList.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(NumbersList!=null) NumbersList.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(NumbersList!=null) NumbersList.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("NumbersListOptionalDerived1(\n");
+
+        if(NumbersList!=null)
+            buffer.append(NumbersList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [NumbersListOptionalDerived1]");
+        return buffer.toString();
+    }
+}
